@@ -1,0 +1,221 @@
+1. VMware & Ubuntu Server Setup
+
+Install VMware Workstation Player on Windows.
+
+Create Ubuntu Server VM with:
+
+4 GB RAM
+
+20 GB Disk
+
+NAT Network
+
+Start the VM and log in.
+
+2. Ubuntu Initial Configuration
+sudo apt update && sudo apt upgrade -y
+sudo apt install openssh-server -y
+sudo systemctl start ssh
+sudo systemctl enable ssh
+sudo ufw allow ssh
+sudo ufw enable
+sudo ufw reload
+ip a
+
+
+Checks:
+
+more /etc/os-release → Ubuntu version
+
+ip a / ifconfig → Check network interfaces
+
+ping -c 3 google.com → Internet connectivity
+
+3. SSH Access from Windows / VS Code
+ssh username@VM_IP
+
+
+Install VS Code on Windows
+
+Install Remote - SSH extension
+
+Connect to Ubuntu via VS Code
+
+hostname
+
+
+Verify connection.
+
+4. Docker Installation on Ubuntu
+sudo apt install -y ca-certificates curl gnupg lsb-release
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo usermod -aG docker $USER
+newgrp docker
+docker --version
+
+
+Explanation: Docker allows you to run apps in isolated containers.
+
+5. Docker – Node.js Express App
+Step 1: Create Project
+mkdir docker-basic-app
+cd docker-basic-app
+
+Step 2: Create package.json
+{
+  "name": "docker-basic-app",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
+
+Step 3: Install Dependencies
+npm install
+
+Step 4: Create app.js
+const express = require('express');
+const app = express();
+
+app.get('/', (req, res) => {
+  res.send('Hello from Docker!');
+});
+
+app.listen(3000, '0.0.0.0', () => {
+  console.log('App running on port 3000');
+});
+
+Step 5: Create Dockerfile
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 3000
+CMD ["node", "app.js"]
+
+Step 6: Build & Run Docker Container
+docker build -t docker-basic-app .
+docker run -d -p 3000:3000 docker-basic-app
+docker ps
+
+
+Access app: http://localhost:3000
+
+Optional Cleanup
+docker stop <container_id>
+docker rm <container_id>
+docker rmi docker-basic-app
+
+6. Docker – Nginx Static Website
+Step 1: Create Project
+mkdir nginx-app
+cd nginx-app
+mkdir html
+cd html
+nano index.html
+
+
+Add your HTML code.
+
+Go back:
+
+cd ..
+
+Step 2: Create Dockerfile
+FROM nginx:latest
+COPY ./html /usr/share/nginx/html
+
+Step 3: Build & Run Image
+docker build -t my-nginx-app .
+docker run -d -p 8080:80 my-nginx-app
+docker ps
+
+
+Access site: http://localhost:8080
+
+Step 4: Push/Pull to Docker Hub
+docker login
+docker tag my-nginx-app username/my-nginx-app:latest
+docker push username/my-nginx-app:latest
+docker pull username/my-nginx-app:latest
+docker run -d -p 8080:80 username/my-nginx-app
+
+7. Git & GitHub Workflow
+Step 1: Initialize Repository
+git init
+git add .
+git commit -m "Initial commit"
+git remote add origin https://github.com/USERNAME/REPO.git
+git branch -M main
+git push -u origin main
+
+Step 2: Updating Changes
+git add .
+git commit -m "Updated files"
+git push
+
+Step 3: Clone Repository
+git clone https://github.com/USERNAME/REPO.git
+cd REPO
+
+
+Key Concepts:
+
+Main branch → stable code
+
+Feature branch → develop new features
+
+git log → view commit history
+
+HEAD → latest commit, Tail → oldest commit
+
+8. Jenkins Installation on Ubuntu
+sudo apt update && sudo apt upgrade -y
+java -version
+sudo apt install openjdk-17-jdk -y
+curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | sudo tee /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+sudo apt update
+sudo apt install jenkins -y
+sudo systemctl start jenkins
+sudo systemctl enable jenkins
+sudo systemctl status jenkins
+
+
+Open Jenkins: http://localhost:8080 (or EC2 public IP)
+
+Retrieve initial admin password:
+
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+
+
+Install suggested plugins → Create Admin user → Finish setup
+
+9. Workflow Summary
+
+VMware + Ubuntu setup complete
+
+SSH & VS Code Remote working
+
+Docker installed and verified
+
+Node.js Express app containerized and running
+
+Nginx static website containerized and running
+
+Docker Hub push/pull complete
+
+Git/GitHub integration complete
+
+Jenkins installed and running
