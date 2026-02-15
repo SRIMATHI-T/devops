@@ -1,0 +1,67 @@
+Installing Ansible on Ubuntu
+
+Step 1: Update System Packages
+
+sudo apt update
+
+
+Step 2: Install Ansible
+
+sudo apt install ansible -y
+
+
+Step 3: Confirm Installation
+
+ansible --version
+
+
+If installed successfully, you’ll see the Ansible version along with related details.
+
+Deploying Apache Using Ansible
+
+Step 1: Clone the Ansible Repository
+
+git clone https://github.com/jagadeeshkanna97/ansible-k.git
+cd ansible-k
+
+
+Step 2: Set Permissions for the SSH Key
+
+chmod 400 ubuntudevops.pem
+
+
+Step 3: Test SSH Access to EC2 Instance
+
+ssh -i ubuntudevops.pem ubuntu@54.82.36.187
+
+
+Step 4: Verify Ansible Can Reach the Hosts
+
+ansible -i inventory.ini slaves -m ping
+
+
+Expected Result:
+
+SUCCESS => {
+    "ping": "pong"
+}
+
+
+Step 5: Run the Ansible Playbook for Apache
+
+ansible-playbook -i inventory.ini apache-playbook.yml
+
+
+Step 6: Check Apache Service on EC2
+
+sudo systemctl status apache2
+
+
+Step 7: Access Your Website
+
+Open your browser and navigate to:
+
+http://54.82.36.187
+
+
+You should see the default Apache landing page if everything worked correctly.
