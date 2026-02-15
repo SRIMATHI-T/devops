@@ -1,6 +1,6 @@
-# DevOps Workshop Notes (Days 1–6)
+# DevOps 
 
-This repository contains concise notes and commands practiced across six DevOps workshop days. Personal Git URLs and personal names have been removed or redacted.
+This repository contains concise notes and commands practiced across six DevOps class.
 
 ---
 
