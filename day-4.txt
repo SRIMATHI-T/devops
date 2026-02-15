@@ -1,0 +1,236 @@
+Complete Jenkins CI/CD Workflow with Docker & GitHub
+1️⃣ Jenkins Installation on Ubuntu
+
+Step 1: Update System
+
+sudo apt update
+sudo apt upgrade -y
+
+
+Step 2: Install Java (Jenkins Requirement)
+
+java -version  # check if Java installed
+sudo apt install openjdk-17-jdk -y
+java -version  # verify
+
+
+Step 3: Add Jenkins Repository Key
+
+curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | sudo tee /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+
+
+Step 4: Add Jenkins Repository
+
+echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+sudo apt update
+
+
+Step 5: Install Jenkins
+
+sudo apt install jenkins -y
+sudo systemctl start jenkins
+sudo systemctl enable jenkins
+sudo systemctl status jenkins
+
+
+Step 6: Access Jenkins Web UI
+
+Browser: http://localhost:8080 or http://<server-ip>:8080
+
+Get initial admin password:
+
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+
+
+Install suggested plugins → Create Admin user
+
+2️⃣ Jenkins Freestyle Jobs
+Step 1: Create Job (Example: devops)
+
+Open Jenkins → New Item
+
+Enter name: devops → Select Freestyle project → OK
+
+Step 2: Add Build Steps
+
+Build Step → Execute Shell
+
+echo "Running devops job"
+
+
+Save job → Build Now → Check console output
+
+Step 3: Chaining Jobs (job1 → job2)
+
+Create job1 and job2 as freestyle projects
+
+Configure job1 → Post-build Actions → Build other projects
+
+Projects to build: job2
+
+Option: Trigger only if build is stable
+
+Save → Build job1 → job2 runs automatically after success
+
+Optional Build Steps for Output
+
+# job1
+echo "Running Job 1"
+# job2
+echo "Running Job 2"
+
+
+Flow Diagram:
+
+job1 → job2
+
+3️⃣ Docker Integration with Jenkins
+Step 1: Docker Installation
+sudo apt install -y docker.io
+sudo systemctl start docker
+sudo systemctl enable docker
+docker --version
+
+Step 2: Node.js App Dockerization
+
+Project Structure
+
+docker-app/
+├─ Dockerfile
+├─ app.js
+├─ package.json
+└─ index.html
+
+
+Dockerfile
+
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 5000
+CMD ["node", "app.js"]
+
+
+app.js
+
+const express = require('express');
+const app = express();
+app.get('/', (req, res) => { res.send('Hello Vaishh – Jenkins and Docker deployment running successfully'); });
+app.listen(5000, '0.0.0.0', () => console.log('App running on port 5000'));
+
+
+package.json
+
+{
+  "name": "docker-basic-app",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": { "start": "node app.js" },
+  "dependencies": { "express": "^4.18.2" }
+}
+
+Step 3: GitHub Integration
+git init
+git add .
+git commit -m "Initial commit"
+git branch -M main
+git remote add origin https://github.com/username/repo.git
+git push -u origin main
+
+4️⃣ Jenkins CI/CD Pipeline Job
+Step 1: Create Pipeline Job
+
+New Item → Name: devops-pipeline → Pipeline → OK
+
+Step 2: Pipeline Script
+pipeline {
+    agent any
+    environment {
+        IMAGE_NAME = "vaishh-node-app"
+        CONTAINER_NAME = "vaishh-container"
+    }
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git 'https://github.com/username/repo.git'
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t $IMAGE_NAME .'
+            }
+        }
+        stage('Stop Old Container') {
+            steps {
+                sh 'docker rm -f $CONTAINER_NAME || true'
+            }
+        }
+        stage('Run Docker Container') {
+            steps {
+                sh 'docker run -d -p 5000:5000 --name $CONTAINER_NAME $IMAGE_NAME'
+            }
+        }
+    }
+}
+
+
+Save → Build Now → Check Console Output:
+
+Git repository cloned
+
+Docker image built
+
+Old container removed (if exists)
+
+New container running
+
+Step 3: Access App
+
+Browser: http://localhost:5000 (or EC2 public IP)
+
+Output: "Hello Vaishh – Jenkins and Docker deployment running successfully"
+
+Optional: GitHub Auto Trigger
+
+Pipeline → Configure → Build Triggers → Tick GitHub hook trigger for GITScm polling
+
+GitHub → Settings → Webhooks → Add webhook:
+
+http://<server-ip>:8080/github-webhook/
+
+
+Now, every push to GitHub triggers Jenkins pipeline automatically
+
+5️⃣ Flow Summary – Full CI/CD
+Developer → GitHub → Jenkins Pipeline → Docker Build → Docker Run → Application Live
+
+
+Developer pushes code to GitHub
+
+Jenkins detects code change (or manual build)
+
+Jenkins clones repository
+
+Builds Docker image
+
+Stops & removes old container
+
+Runs new container
+
+App deployed automatically
+
+Optional chaining of freestyle jobs for extra automation
+
+6️⃣ Important Jenkins Concepts
+
+Job → A task Jenkins performs (build/test/deploy)
+
+Pipeline → Series of automated stages (clone → build → run)
+
+Plugin → Connect Jenkins with GitHub, Docker, etc.
+
+Build Queue → Handles sequential builds of multiple jobs
+
+Trigger → Automated start of job/pipeline
