@@ -1,0 +1,499 @@
+DEVOPS PRACTICAL REPORT
+
+Linux and Window:
+Windows Operating System:
+
+Windows is a commercial operating system developed by Microsoft. It is widely used for personal computers and enterprise environments.
+
+Features of Windows:
+
+•	Graphical User Interface (GUI) based
+•	Easy to use
+•	Licensed software (paid)
+•	Mostly used for desktop applications
+•	Uses PowerShell and Command Prompt for command-line operations
+
+Linux Operating System
+
+Linux is an open-source operating system. It is widely used in servers, cloud platforms, and DevOps environments.
+
+Features of Linux:
+
+•	Open-source (free to use)
+•	Highly secure
+•	Lightweight and stable
+•	Mostly command-line based
+•	Used in servers and cloud systems
+•	Multiple distributions (Ubuntu, CentOS, RedHat, etc.)
+
+Difference Between Linux and Windows:
+
+
+Feature	Windows	Linux
+License	Paid	Free & Open-source
+Usage	Desktop-focused	Server-focused
+Security	Moderate	High
+Customization	Limited	Highly customizable
+Command Line	PowerShell / CMD	Terminal (Bash)
+DevOps Usage	Limited	Highly preferred
+ 
+Virtual Machine (VM)
+What is a Virtual Machine?
+
+A Virtual Machine (VM) is a software-based computer that runs inside another computer. It allows us to run multiple operating systems on a single physical system.
+
+For example:
+We can run Ubuntu (Linux) inside a Windows system using VMware.
+
+Why Virtual Machine is Used in DevOps?
+
+•	To test applications in different environments
+•	To simulate server environments
+•	To isolate systems
+•	To practice Linux without removing Windows
+
+Important VM Concepts
+
+1.	Hypervisor
+
+A hypervisor is software that creates and manages virtual machines. Example:
+
+•	VMware
+•	VirtualBox
+•	Hyper-V
+
+2.	Guest OS
+
+The operating system installed inside the virtual machine. Example: Ubuntu inside VMware.
+
+3.	Host OS
+
+The main operating system installed on the physical computer. Example: Windows 10.
+
+4.	Networking Modes in VM
+
+1.	NAT (Network Address Translation)
+o	VM shares internet connection from host
+o	Safe and commonly used
+2.	Bridged Network
+o	VM acts like a separate computer in same network
+o	Gets its own IP address
+ 
+What is WSL?
+Definition
+
+•	WSL (Windows Subsystem for Linux) allows users to run Linux directly inside Windows without installing a virtual machine.
+•	It enables Linux commands and tools to run on Windows.
+
+Features of WSL
+
+•	No need for full VM
+•	Lightweight
+•	Direct integration with Windows
+•	Faster than traditional VM
+
+Difference Between WSL and Virtual Machine
+
+
+Feature	WSL	Virtual Machine
+Full OS	Partial Linux Kernel	Full Operating System
+Performance	Faster	Slightly slower
+Resource Usage	Low	High
+Isolation	Less	More
+Setup	Simple	Requires installation
+VMware Installation and Setup:
+1.	Introduction
+
+VMware Workstation Pro is a virtualization software used to create and manage virtual machines on Windows and Linux systems. After Broadcom’s acquisition of VMware, VMware Workstation Pro (for Windows/Linux) and VMware Fusion (for macOS) are available as free software downloads.
+
+This section explains the complete procedure to download, configure, and install VMware Workstation Pro 25H2 on a Windows system.
+
+2.	Creating a Broadcom Account
+
+To download VMware Workstation Pro, a Broadcom account is required.
+
+Steps:
+
+1.	Open a web browser.
+ 
+2.	Search for “VMware Workstation”.
+3.	Open the official VMware website.
+4.	Click on “Download Now”.
+5.	You will be redirected to the Broadcom website.
+6.	If you already have an account, sign in.
+7.	If not, click “Register” and complete the registration process:
+
+•	Enter email address.
+•	Complete CAPTCHA verification.
+•	Verify email using the code received.
+•	Enter name and country.
+•	Create a password.
+•	Accept terms and conditions.
+
+8.	After registration, log in to access the Broadcom dashboard.
+
+3.	Downloading VMware Workstation Pro 25H2
+
+After logging into Broadcom:
+
+1.	Go to “My Downloads”.
+2.	Click “Free software downloads available here”.
+3.	Locate VMware Workstation Pro.
+o	If not visible, use the search bar and type “Workstation Pro”.
+4.	Select “Workstation Pro 25H2” (latest version).
+5.	Choose your operating system (Windows or Linux).
+6.	Click the version number.
+7.	Open the Terms and Conditions link.
+8.	Accept the agreement by checking the box.
+9.	Click “Download”.
+10.	Complete the verification form:
+o	Full name
+o	Email address
+o	Physical address
+o	Country
+o	Postal code
+11.	Submit the form.
+12.	Click the active download button.
+13.	The installer file will begin downloading.
+
+4.	Disabling Conflicting Windows Features (Important)
+
+VMware requires direct access to hardware virtualization. Some Windows features interfere with VMware and must be disabled.
+
+Steps:
+
+1.	Open Control Panel.
+2.	Select “Turn Windows features on or off”.
+ 
+3.	Uncheck the following options if enabled:
+
+•	Hyper-V
+•	Virtual Machine Platform
+•	Windows Hypervisor Platform
+•	Windows Sandbox
+•	Windows Subsystem for Linux (WSL)
+
+4.	Click “OK”.
+5.	Restart the system when prompted.
+
+5.	Disabling Memory Integrity
+
+Memory Integrity (Core Isolation) may block VMware virtualization.
+
+Steps:
+
+1.	Open “Windows Security”.
+2.	Go to “Device Security”.
+3.	Click “Core Isolation Details”.
+4.	Turn off “Memory Integrity” if enabled.
+5.	Restart the system.
+
+6.	Enabling Virtualization in BIOS/UEFI
+
+VMware requires hardware virtualization to run 64-bit operating systems.
+
+To Check in Windows:
+
+1.	Open Task Manager.
+2.	Go to “Performance” tab.
+3.	Select CPU.
+4.	Check the “Virtualization” status.
+o	If it shows “Enabled” → No action needed.
+o	If “Disabled” → Enable in BIOS.
+
+To Enable in BIOS:
+
+1.	Restart the system.
+2.	Enter BIOS/UEFI setup (usually by pressing F2, F10, DEL, or ESC during boot).
+3.	Locate virtualization settings:
+o	Intel: Intel VT-x or Intel Virtualization Technology.
+o	AMD: AMD-V or Secure Virtual Machine (SVM).
+4.	Enable the option.
+5.	Save and exit BIOS.
+ 
+7.	Installing VMware Workstation Pro 25H2
+
+After completing the above configurations:
+
+1.	Open the downloaded installer file.
+2.	Double-click to start setup.
+3.	Confirm that Hyper-V is not detected.
+4.	Click “Next” through installation steps.
+5.	Accept license agreement.
+6.	Choose installation location.
+7.	Click “Install”.
+8.	After installation completes, click “Finish”.
+
+8.	Post-Installation
+
+1.	Open VMware Workstation Pro from Start Menu.
+2.	The software is now ready to create new virtual machines.
+3.	Ubuntu or any other operating system ISO can now be installed.
+
+Ubuntu Server 22.04.5 Installation in VMware
+1.	Creating a New Virtual Machine
+
+1.	Open VMware Workstation Pro.
+2.	Click Create a New Virtual Machine.
+3.	Select Typical (Recommended) → Click Next.
+4.	Choose Installer disc image file (ISO) and browse the Ubuntu 22.04.5 Server ISO file.
+5.	Select Guest OS:
+o	Type: Linux
+o	Version: Ubuntu 64-bit
+6.	Enter a VM name (e.g., Ubuntu-Server-22.04) and choose location.
+7.	Set disk size (recommended: 40–60 GB) and select Store virtual disk as a single file.
+8.	Click Customize Hardware (optional):
+o	Memory: 4 GB or more
+o	Processors: 2 cores
+9.	Click Finish to create the virtual machine.
+
+2.	Starting Ubuntu Installation
+
+1.	Power on the VM.
+2.	Select Install Ubuntu Server from the menu.
+3.	Choose language (e.g., English).
+4.	Select keyboard layout.
+5.	Choose installation type and continue.
+ 
+3.	Network and Basic Configuration
+
+1.	Accept default network settings (DHCP).
+2.	Leave proxy blank (if not required).
+3.	Accept default mirror address and continue.
+
+4.	Disk Partitioning
+
+1.	Select Use an entire disk.
+2.	Ensure the selected disk is the VMware virtual disk.
+3.	Review partition details.
+4.	Confirm to write changes (affects only the virtual disk).
+
+5.	User and Server Setup
+
+1.	Enter:
+o	Your name
+o	Server name (hostname)
+o	Username
+o	Password
+2.	Select Install OpenSSH server (recommended for remote access).
+3.	Skip additional server packages unless required.
+
+6.	Installation and Reboot
+
+1.	Wait for installation to complete.
+2.	Select Reboot Now.
+3.	The system will restart and boot from the virtual disk.
+
+7.	First Login and Update
+
+1.	Log in using the created username and password.
+2.	Update the system:
+
+sudo apt update sudo apt upgrade
+
+
+
+
+
+
+
+
+
+
+Linux Commands With Explanation
+Linux commands are executed in the terminal to manage files, directories, users, and system processes. Below is a structured list of important commands.
+ 
+1.	File and Directory Management
+
+
+Command	Explanation	Example
+pwd	Show current working directory	pwd → /home/user
+ls	List files and directories	ls or ls -l (detailed view)
+ls -a	Show all files including hidden	ls -a
+ls -lh	List with human-readable sizes	ls -lh
+cd	Change directory	cd Documents
+mkdir	Create a directory	mkdir Projects
+rmdir	Remove an empty directory	rmdir OldFolder
+rm	Remove a file	rm file.txt
+rm -r	Remove a directory and all contents recursively	rm -r OldFolder
+rm -rf	Force remove a directory and contents without prompts	rm -rf /tmp/test
+touch	Create an empty file	touch file.txt
+cp	Copy files or directories	cp file.txt backup.txt
+cp -r	Copy directories recursively	cp -r folder1 folder2
+mv	Move or rename files/directories	mv file.txt Documents/
+
+2.	Viewing and Editing Files
+
+
+Command	Explanation	Example
+cat	Display entire file content	cat file.txt
+less	View file page by page	less file.txt
+head	Show first lines of a file	head -5 file.txt
+tail	Show last lines of a file	tail -5 file.txt
+nano	Open file in terminal text editor	nano file.txt
+ 
+Command	Explanation	Example
+vim	Advanced terminal editor	vim file.txt
+
+3.	Searching and Filtering
+
+
+12	Explanation	Example
+grep	Search text inside files	grep "error" file.txt
+find	Find files/directories	find /home -name "*.txt"
+locate	Quickly find files (uses database)	locate file.txt
+wc	Count lines, words, characters	wc file.txt
+sort	Sort file lines	sort file.txt
+uniq	Remove duplicate lines	uniq file.txt
+
+4.	Wildcards and Pattern Matching
+
+
+Symbol	Explanation	Example
+*	Matches any number of characters	ls *.txt → all .txt files
+?	Matches a single character	ls file?.txt → file1.txt, file2.txt
+[ ]	Matches any one character inside brackets	ls file[12].txt → file1.txt and file2.txt
+
+5.	Permissions and Ownership
+
+
+Command	Explanation	Example
+chmod	Change file permissions	chmod 755 file.sh
+chown	Change file owner	sudo chown user file.txt
+chgrp	Change file group	sudo chgrp group file.txt
+ls -l	View permissions and ownership	ls -l file.txt
+ 
+Permissions:
+
+•	r → read
+•	w → write
+•	x → execute
+Roles:
+•	Owner/User
+•	Group
+•	Others
+
+6.	System Information
+
+
+Command	Explanation	Example
+uname -a	Show OS and kernel info	uname -a
+df -h	Disk usage	df -h
+free -h	Memory usage	free -h
+top	Show running processes	top
+uptime	Show system uptime	uptime
+whoami	Show current user	whoami
+
+7.	Networking
+
+
+Command	Explanation	Example
+ip a	Show IP address and interfaces	ip a
+ifconfig	Show network interfaces (older)	ifconfig
+ping	Test connectivity	ping google.com
+netstat -tuln	Show listening ports	netstat -tuln
+
+8.	Package Management (Ubuntu/Debian)
+
+
+Command	Explanation	Example
+sudo apt update	Update package list	sudo apt update
+ 
+Command	Explanation	Example
+sudo apt upgrade	Upgrade installed packages	sudo apt upgrade
+sudo apt install	Install a package	sudo apt install nginx
+sudo apt remove	Remove a package	sudo apt remove nginx
+sudo apt autoremove	Remove unnecessary packages	sudo apt autoremove
+
+9.	Process Management
+
+
+Command	Explanation	Example
+ps aux	Show running processes	ps aux
+kill PID	Terminate a process by PID	kill 1234
+killall	Terminate process by name	killall firefox
+jobs	Show background jobs	jobs
+fg / bg	Move jobs to foreground/background	fg %1
+
+10.	Shutdown and Reboot
+
+
+Command	Explanation	Example
+shutdown -h now	Turn off immediately	sudo shutdown -h now
+reboot	Restart system	sudo reboot
+logout	Log out current user	logout
+
+1.	vi Editor
+
+•	vi is a basic terminal text editor available on almost all Linux distributions.
+•	You can use it to create or edit files.
+ 
+Basic Commands:
+
+Command	Explanation
+vi file.txt	Open or create file file.txt
+i	Enter insert mode to write text
+Esc	Exit insert mode
+:w	Save changes
+:q	Quit editor
+:wq	Save and quit
+:q!	Quit without saving
+
+2.	LTS – Long Term Support
+
+•	LTS stands for Long Term Support.
+•	In Linux (Ubuntu, for example), LTS versions are supported for a longer period
+(typically 5 years).
+•	Includes security updates, bug fixes, and stability improvements.
+•	Recommended for servers and production environments because they are stable and reliable.
+
+Example:
+
+•	Ubuntu 22.04.5 LTS → supported until 2027.
+•	Ubuntu 24.04 → next LTS in future.
+
+rm -rf Command in Linux
+1.	What is rm?
+
+•	rm stands for remove.
+•	It is used to delete files or directories from Linux.
+
+2.	Options / Flags
+Flag	Meaning
+-r	Recursive – deletes directories and all their contents, including subdirectories
+-f	Force – deletes without asking for confirmation
+-d	Delete empty directories only (optional, not commonly used with -rf)
+ 
+Commonly used: rm -rf directory_name
+(-rdf is sometimes written but -rf is sufficient; the order of flags doesn’t matter)
+
+Wildcards in ls Command
+
+•	* → Matches any number of characters.
+o	Example: ls *.txt → lists all .txt files.
+•	? → Matches exactly one character.
+o	Example: ls file?.txt → matches file1.txt, file2.txt, but not
+file10.txt.
+•	[ ] → Matches any one character inside brackets.
+o	Example: ls file[12].txt → matches file1.txt and file2.txt.
+•	ls *.?? → Lists files with any name and exactly two-character extension.
+o	Matches: file.sh, data.py
+o	Does not match: file.txt or a.c
+
+1. sudo apt update && sudo apt upgrade
+
+•	Purpose: Keep your Ubuntu system up-to-date.
+•	sudo apt update → Updates the list of available software packages and their versions.
+•	sudo apt upgrade → Installs the latest versions of installed packages.
+•	sudo → Runs the command as superuser (administrator).
+
+Example:
+
+sudo apt update sudo apt upgrade -y
+
+•	The -y automatically confirms all upgrades.
+
+
+
+
+	
