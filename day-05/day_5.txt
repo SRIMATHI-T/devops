@@ -1,0 +1,415 @@
+CREATE AWS ACCOUNT
+AWS stands for Amazon Web Services, which is a cloud platform provided by Amazon.
+STEP 1: Open AWS Website
+Go to:
+
+https://aws.amazon.com
+
+Click Create an AWS Account (top right corner).
+
+STEP 2: Enter Email and Account Name
+
+• Enter your Email ID
+• Enter Account Name (example: Vaishh-DevOps)
+• Click Verify Email
+
+You will receive a verification code in your email.
+Enter the code and continue.
+
+STEP 3: Create Root User Password
+
+• Set strong password
+• Confirm password
+• Click Continue
+
+STEP 4: Enter Contact Information
+
+Select:
+
+Personal (for learning)
+
+Fill:
+
+• Full Name
+• Phone number
+• Address
+• Country
+
+Click Continue.
+
+STEP 5: Add Payment Information
+
+You must enter:
+
+• Debit card / Credit card details
+
+⚠ AWS requires card verification even for Free Tier.
+(They may deduct ₹2–₹5 temporarily and refund it.)
+
+Click Verify and Continue.
+
+STEP 6: Identity Verification
+
+• Enter phone number
+• Choose SMS or Call
+• Enter OTP received
+
+Click Continue.
+
+STEP 7: Select Support Plan
+
+Choose:
+
+Basic Support (Free)
+
+Click Complete Sign Up.
+
+STEP 8: Wait for Account Activation
+
+AWS will take a few minutes (sometimes up to 24 hours).
+You will receive a confirmation email when ready.
+
+STEP 9: Login to AWS Console
+
+Go to:
+
+https://aws.amazon.com
+
+Click Sign In → Root User
+
+Enter:
+
+• Email
+• Password
+
+Now you are inside AWS Console 🎉
+
+
+
+
+PART 1: CREATE WINDOWS EC2 INSTANCE
+
+STEP 1: Login to AWS Console
+Go to: https://aws.amazon.com
+
+Sign in → Console
+
+Go to:
+
+EC2 (Search EC2 in search bar)
+
+STEP 2: Launch Instance
+
+Click → Launch Instance
+
+STEP 3: Name the Instance
+
+Name:
+
+Windows-Server
+
+STEP 4: Choose AMI
+
+Select:
+
+Microsoft Windows Server 2022 Base
+
+STEP 5: Choose Instance Type
+
+Select:
+
+t2.micro (Free tier eligible)
+
+STEP 6: Create Key Pair
+
+Click Create new key pair
+
+Name: windows-key
+Type: RSA
+Format: .pem
+
+Download and save safely.
+
+STEP 7: Network Settings
+
+Allow:
+
+✔ RDP (3389)
+✔ HTTP (80)
+
+STEP 8: Launch Instance
+
+Click Launch Instance
+
+Wait until status shows:
+
+Running
+
+STEP 9: Connect to Windows Instance
+
+Select instance
+
+Click Connect
+
+Choose RDP Client
+
+Download RDP file
+
+Get Windows password
+→ Upload .pem file
+→ Decrypt password
+
+Now connect using Remote Desktop.
+
+PART 2: CREATE UBUNTU EC2 INSTANCE
+
+STEP 1: Launch Instance
+
+Click Launch Instance
+
+STEP 2: Name
+
+Ubuntu-Server
+
+STEP 3: Choose AMI
+
+Select:
+
+Ubuntu Server 22.04 LTS
+
+STEP 4: Instance Type
+
+t2.micro
+
+STEP 5: Key Pair
+
+Create new key pair
+
+Name: ubuntu-key
+Type: RSA
+Format: .pem
+
+Download it.
+
+STEP 6: Network Settings
+
+Allow:
+
+✔ SSH (22)
+✔ HTTP (80)
+
+STEP 7: Launch Instance
+
+Click Launch
+
+Wait until status: Running
+
+PART 3: CONNECT TO UBUNTU INSTANCE
+
+Open terminal (Git Bash or Linux terminal):
+
+chmod 400 ubuntu-key.pem
+
+Connect:
+
+ssh -i ubuntu-key.pem ubuntu@<public-ip>
+
+Example:
+
+ssh -i ubuntu-key.pem ubuntu@13.233.xx.xx
+
+PART 4: INSTALL APACHE SERVER IN UBUNTU
+
+STEP 1: Update System
+
+sudo apt update
+
+STEP 2: Install Apache
+
+sudo apt install apache2 -y
+
+STEP 3: Start Apache
+
+sudo systemctl start apache2
+
+Enable on boot:
+
+sudo systemctl enable apache2
+
+STEP 4: Check Apache Status
+
+sudo systemctl status apache2
+
+STEP 5: Open Browser
+
+Go to:
+
+http://<public-ip>
+
+You will see:
+
+Apache2 Ubuntu Default Page 🎉
+
+OPTIONAL: CREATE CUSTOM WEBPAGE
+
+Go to web directory:
+
+cd /var/www/html
+
+Edit index file:
+
+sudo nano index.html
+
+Add:
+
+<h1>Hello Vaishh – Apache Server Running on AWS EC2</h1>
+
+Save and exit.
+
+Refresh browser.
+
+
+
+
+FULL STEP-BY-STEP GUIDE: AWS IAM → EC2 → Terraform
+STEP 1: CREATE IAM USER
+
+Go to AWS Console → https://aws.amazon.com
+
+Search IAM → Click Users → Add users
+
+Enter User name → e.g., terraform-user
+
+Access type → Programmatic access (for CLI/API)
+
+Click Next: Permissions → Attach policy: AdministratorAccess
+
+Click Next: Tags → Add optional tags
+
+Click Next: Review → Create user
+
+✅ You will get Access Key ID and Secret Access Key. Save them safely.
+
+STEP 2: CREATE KEY PAIR IN EC2
+
+Go to EC2 Console → Key Pairs
+
+Click Create Key Pair
+
+Enter Name → e.g., devuserkey
+
+Format → .pem
+
+Click Create key pair → Download .pem file
+
+⚠ Keep this .pem file safe. It’s required for SSH access.
+
+STEP 3: INSTALL AND CONFIGURE AWS CLI ON UBUNTU
+
+Update system:
+
+sudo apt update -y
+sudo apt install -y unzip curl
+
+
+Download AWS CLI:
+
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+
+
+Verify installation:
+
+aws --version
+
+
+Configure CLI using IAM credentials:
+
+aws configure
+
+
+Enter:
+
+AWS Access Key ID → from IAM
+
+AWS Secret Access Key → from IAM
+
+Default region → e.g., us-east-1
+
+Default output format → json
+
+✅ AWS CLI is ready.
+
+STEP 4: INSTALL TERRAFORM ON UBUNTU
+
+Add HashiCorp repository:
+
+sudo apt update -y
+sudo apt install -y gnupg software-properties-common curl
+curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+sudo apt update -y
+sudo apt install terraform -y
+
+
+Verify installation:
+
+terraform -version
+
+
+✅ Terraform is ready.
+
+STEP 5: TERRAFORM PROJECT SETUP
+
+Create project folder:
+
+mkdir terraform-ec2
+cd terraform-ec2
+
+
+Create main.tf file with your Terraform code:
+
+EC2 instance
+
+Key pair
+
+Security group
+
+Default VPC/subnet
+
+Example variables in main.tf or variables.tf:
+
+variable "aws_region" { default = "us-east-1" }
+variable "instance_type" { default = "t3.micro" }
+variable "existing_key_pair_name" { default = "devuserkey" }
+variable "generated_key_pair_name" { default = "terraform-ec2-key" }
+variable "public_key_path" { default = "~/.ssh/id_rsa.pub" }
+variable "allowed_ssh_cidr" { default = "0.0.0.0/0" }
+
+STEP 6: TERRAFORM COMMANDS
+
+Initialize Terraform project (download providers):
+
+terraform init
+
+
+Validate syntax:
+
+terraform validate
+
+
+Plan resources (see what will be created):
+
+terraform plan
+
+
+Apply configuration (create EC2 instance, key pair, SG):
+
+terraform apply
+
+Type yes to confirm.
+Check resources:
+terraform state list
+Destroy resources (clean up):
+terraform destroy
